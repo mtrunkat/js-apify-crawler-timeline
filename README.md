@@ -18,9 +18,10 @@ For example if output of your crawler is ...
 
 ... and you set this act as finish webhook of that crawler then it creates a key-value store with the name of your crawler and generates following table there in `json` and `csv` formats:
 
-| Date       | 5.6.2017 22:00:00       | 5.6.2017 23:00:00 | 6.6.2017 00:00:00 |
-|------------|-------------------------|-------------------|-------------------|
-| someString | some value at that date | some other value  | some other value  |
-| someNumber | 123.4                   | 42                | 1                 |
+| Date              | someString              | someNumber |
+|-------------------|-------------------------|------------|
+| 5.6.2017 22:00:00 | some value at that date | 123.456    |
+| 5.6.2017 23:00:00 | some other value        | 42         |
+| 6.6.2017 00:00:00 | some other value        | 2          |
 
-On each run of your crawler the table gets updated. 
+On each run of your crawler the table gets updated.

@@ -55,35 +55,29 @@ Apify.main(async () => {
 
     const timeline = record
         ? record.body
-        : [['Date']].concat(_.keys(pageFunctionResult).map(key => [key]));
+        : [['Date'].concat(_.keys(pageFunctionResult))];
 
     pageFunctionResult['Date'] = new Date(result.items[0].pageFunctionFinishedAt);
 
-    const updateTimeline = timeline.map((line) => {
-       const key = line[0];
-       const newVal = pageFunctionResult[key];
-
-       delete pageFunctionResult[key];
-
-       return line.concat(newVal);
-    });
-
     console.log('Timeline:');
     console.log(timeline);
+
+    timeline.push(timeline[0].map(key => pageFunctionResult[key]));
+
     console.log('Updated timeline:');
-    console.log(updateTimeline);
+    console.log(timeline);
 
     await keyValueStores.putRecord({
         key: 'timeline.json',
         contentType: 'application/json',
-        body: JSON.stringify(updateTimeline),
+        body: JSON.stringify(timeline),
         storeId: store.id,
     });
 
     await keyValueStores.putRecord({
         key: 'timeline.csv',
         contentType: 'application/vnd.ms-excel',
-        body: toCSV(updateTimeline),
+        body: toCSV(timeline),
         storeId: store.id,
     });
 
