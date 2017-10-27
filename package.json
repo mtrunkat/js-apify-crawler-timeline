@@ -1,0 +1,26 @@
+{
+  "name": "js-apify-crawler-timeline",
+  "version": "1.0.0",
+  "description": "This act creates a timeline spreadsheet from crawler results. Main usecase is to create a spreadsheet containing changes of some web page in time.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mtrunkat/js-apify-crawler-timeline.git"
+  },
+  "author": "Marek Trunkát",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mtrunkat/js-apify-crawler-timeline/issues"
+  },
+  "homepage": "https://github.com/mtrunkat/js-apify-crawler-timeline#readme",
+  "dependencies": {
+    "apify": "^0.4.32",
+    "array-to-csv": "^1.0.1",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2",
+    "underscore": "^1.8.3"
+  }
+}
