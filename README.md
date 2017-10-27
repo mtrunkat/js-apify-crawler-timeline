@@ -24,3 +24,5 @@ For example if output of your crawler is ...
 | someNumber | 123.4                   | 42                | 1                 |
 
 On each run of your crawler the table gets updated. 
+
+Webhook to execute this act from crawler is following url: `https://api.apify.com/v2/acts/mtrunkat~crawler-timeline/runs?token=[YOUR_API_TOKEN]`
