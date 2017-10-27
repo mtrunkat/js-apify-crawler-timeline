@@ -11,8 +11,8 @@ For example if output of your crawler is ...
 
 ```json
 {
-   someString: 'something',
-   someNumber: 123.456
+   "someString": "something",
+   "someNumber": 123.456
 }
 ```
 
