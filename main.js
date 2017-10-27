@@ -24,7 +24,7 @@ Apify.main(async () => {
     console.log(crawler);
 
     const store = await keyValueStores.getOrCreateStore({
-        storeName: `crawler-timeline-crawler.customId.replace(/\W+/g, '-')`,
+        storeName: `crawler-timeline--${crawler.customId.replace(/\W+/g, '-')}`,
     });
 
     console.log('Store:');
