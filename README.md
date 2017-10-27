@@ -25,3 +25,6 @@ For example if output of your crawler is ...
 | 6.6.2017 00:00:00 | some other value        | 2          |
 
 On each run of your crawler the table gets updated.
+
+Webhook to execute this act from crawler is following url: `https://api.apify.com/v2/acts/mtrunkat~crawler-timeline/runs?token=[YOUR_API_TOKEN]`
+
