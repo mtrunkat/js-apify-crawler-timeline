@@ -58,14 +58,7 @@ Apify.main(async () => {
         : [['Date'].concat(_.keys(pageFunctionResult))];
 
     pageFunctionResult['Date'] = new Date(result.items[0].pageFunctionFinishedAt);
-
-    console.log('Timeline:');
-    console.log(timeline);
-
     timeline.push(timeline[0].map(key => pageFunctionResult[key]));
-
-    console.log('Updated timeline:');
-    console.log(timeline);
 
     await keyValueStores.putRecord({
         key: 'timeline.json',
