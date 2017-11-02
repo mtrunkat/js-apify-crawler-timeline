@@ -32,8 +32,8 @@ As webhook data you can pass `json` containing 2 properties:
 
 | Name              | Type | Description |
 |-------------------|------|-------------|
-| dontAddNewKeys | boolean | If true then new keys found after the first execution are not added into the spreadsheet. |
-| maxRowsPerPage | integer | If set then if max number of rows is exceeded then new spreadsheet gets created. |
+| `dontAddNewKeys` | `boolean` | If true then new keys found after the first execution are not added into the spreadsheet. |
+| `maxRowsPerPage` | `integer` | If set then if max number of rows is exceeded then new spreadsheet gets created. |
 
 Example webhook data:
 
