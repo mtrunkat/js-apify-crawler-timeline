@@ -14,6 +14,12 @@ Apify.main(async () => {
     if (!_id) throw new Error('"_id" field is missing in INPUT!');
     if (!actId) throw new Error('"actId" field is missing in INPUT!');
 
+    const data = input.data
+        ? (_.isString(input.data) ? JSON.parse(input.data) : input.data)
+        : null;
+    const maxRowsPerPage = data ? data.maxRowsPerPage : null;
+    const dontAddNewKeys = data ? data.dontAddNewKeys : false;
+
     const crawler = await crawlers.getCrawlerSettings({
         crawlerId: actId,
     });
@@ -24,8 +30,10 @@ Apify.main(async () => {
     console.log(crawler);
 
     const store = await keyValueStores.getOrCreateStore({
-        storeName: `crawler-timeline--${crawler.customId.replace(/\W+/g, '-')}`,
+        storeName: `crawler-timeline-${crawler.customId.replace(/\W+/g, '-')}`,
     });
+
+    await Apify.client.setOptions({ storeId: store.id });
 
     console.log('Store:');
     console.log(store);
@@ -48,30 +56,52 @@ Apify.main(async () => {
     console.log('Page function result:');
     console.log(pageFunctionResult);
 
-    const record = await keyValueStores.getRecord({
-        key: 'timeline.json',
-        storeId: store.id,
-    });
+    const currentPageRecord = await keyValueStores.getRecord({ key: 'currentPage' });
+    let currentPage = currentPageRecord ? parseInt(currentPageRecord.body) : 0;
 
-    const timeline = record
-        ? record.body
-        : [['Date'].concat(_.keys(pageFunctionResult))];
+    console.log(`Current page: ${currentPage}`);
+
+    const timelineRecord = await keyValueStores.getRecord({ key: `timeline-page-${currentPage}.json` });
+    let timeline;
+
+    if (!timelineRecord) {
+        console.log('Initiating timeline object ...');
+        timeline = [['Date'].concat(_.keys(pageFunctionResult))];
+    } else if (timelineRecord.body.length >= maxRowsPerPage) {
+        console.log('Creating new page ...');
+        timeline = [['Date'].concat(_.keys(pageFunctionResult))];
+        currentPage++;
+    } else {
+        console.log('Appending data to previous record ...');
+        timeline = timelineRecord.body;
+    }
 
     pageFunctionResult['Date'] = new Date(result.items[0].pageFunctionFinishedAt);
-    timeline.push(timeline[0].map(key => pageFunctionResult[key]));
+
+    if (!dontAddNewKeys) {
+        const newKeys = _.chain(pageFunctionResult).keys().difference(timeline[0]).value();
+        console.log(`Appending new keys: ${newKeys.join(', ')}`)
+        if (newKeys.length > 0) timeline[0] = timeline[0].concat(newKeys);
+    }
+
+    const newLine = timeline[0].map(key => pageFunctionResult[key] || '');
+    timeline.push(newLine);
 
     await keyValueStores.putRecord({
-        key: 'timeline.json',
+        key: `timeline-page-${currentPage}.json`,
         contentType: 'application/json',
         body: JSON.stringify(timeline),
-        storeId: store.id,
     });
 
     await keyValueStores.putRecord({
-        key: 'timeline.csv',
+        key: `timeline-page-${currentPage}.csv`,
         contentType: 'application/vnd.ms-excel',
         body: toCSV(timeline),
-        storeId: store.id,
+    });
+
+    await keyValueStores.putRecord({
+        key: 'currentPage',
+        body: currentPage.toString(),
     });
 
     console.log('Done!');
