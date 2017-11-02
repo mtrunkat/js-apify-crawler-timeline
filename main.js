@@ -67,7 +67,7 @@ Apify.main(async () => {
     if (!timelineRecord) {
         console.log('Initiating timeline object ...');
         timeline = [['Date'].concat(_.keys(pageFunctionResult))];
-    } else if (timelineRecord.body.length >= maxRowsPerPage) {
+    } else if (maxRowsPerPage && timelineRecord.body.length >= maxRowsPerPage) {
         console.log('Creating new page ...');
         timeline = [['Date'].concat(_.keys(pageFunctionResult))];
         currentPage++;
